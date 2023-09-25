@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -30,11 +31,13 @@ func main() {
 		}
 		defer conn.Close()
 
+		toSend := strings.Split("this is a backend message", " ")
+
 		var i int
 		for {
 			send := struct {
-				Message int `json:"message,omitempty"`
-			}{i}
+				Message string `json:"message,omitempty"`
+			}{toSend[i%len(toSend)]}
 
 			if err := conn.WriteJSON(send); err != nil {
 				// probably due to client close, break to trigger deferred close of conn
