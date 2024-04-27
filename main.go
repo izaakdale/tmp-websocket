@@ -62,6 +62,13 @@ func connect(wsu WebsocketUpgrader) func(w http.ResponseWriter, r *http.Request)
 }
 
 func main() {
+
+	liveMux := http.NewServeMux()
+	liveMux.HandleFunc("/live", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+	go http.ListenAndServe(":9090", liveMux)
+
 	mux := http.NewServeMux()
 
 	// allow origins

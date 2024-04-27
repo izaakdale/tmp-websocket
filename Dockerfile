@@ -12,4 +12,5 @@ COPY --from=builder /tmp-websocket .
 
 
 EXPOSE 80
+EXPOSE 9090
 CMD [ "/tmp-websocket" ]
