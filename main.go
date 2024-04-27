@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/rs/cors"
 )
 
 type CtxKey string
@@ -74,11 +75,13 @@ func main() {
 
 	srv := http.Server{
 		Addr:    fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT")),
-		Handler: mux,
+		Handler: cors.AllowAll().Handler(mux),
 		ConnContext: func(ctx context.Context, c net.Conn) context.Context {
 			return context.WithValue(ctx, connectionID, uuid.New())
 		},
 	}
 
-	srv.ListenAndServe()
+	if err := srv.ListenAndServe(); err != nil {
+		log.Fatal(err)
+	}
 }
